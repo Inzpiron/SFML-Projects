@@ -4,6 +4,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <string>
+#include <vector>
 using namespace std;
 
 typedef struct{
@@ -19,6 +20,19 @@ typedef struct{
 
 Map * newMap(int xsize, int ysize);
 void MapLineComplete(Map * m);
+
+class TetrisText{
+    private:
+        int x, y, size;
+        string realText;
+        sf::Font font;
+        sf::Color cor;
+        string str;
+    public:
+        TetrisText(int x, int y, string str, sf::Font font, int size);
+        void draw(sf::RenderWindow &WindowGame);
+};
+
 class Tetris{
     private:
         int posx, vel;
@@ -30,7 +44,7 @@ class Tetris{
         string peca[5][4][3] = { { {" # ","###","   "},  {" # "," ##"," # "} , {"   ","###"," # "}, {" # ","## "," # "} },
                                  { {"  #","  #","  #"},  {"###","   ","   "} , {"  #","  #","  #"}, {"###","   ","   "} },
                                  { {" ##","## ","   "},  {"#  ","## "," # "} , {" ##","## ","   "}, {"#  ","## "," # "} },
-                                 { {" ##"," ##","   "},  {" ##"," ##","   "} , {" ##"," ##","   "}, {" ##"," ##","   "} },
+                                 { {"## ","## ","   "},  {"## ","## ","   "} , {"## ","## ","   "}, {"## ","## ","   "} },
                                  { {"#  ","#  ","## "},  {"   ","  #","###"} , {"## "," # "," # "}, {"   ","###","#  "} } };
 
     public:
@@ -47,5 +61,5 @@ class Tetris{
         void setPecaRot(Map * m);
         void addToMap(Map * m);
         void Reset();
-        char getPeca(int type, int rot, int i, int j);
+        void draw(sf::RenderWindow &WindowGame);
 };
