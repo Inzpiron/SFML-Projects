@@ -24,7 +24,7 @@ Map * newMap(int xsize, int ysize){
 	return m;
 }
 
-void MapLineComplete(Map * m){
+int checkMapLineComplete(Map * m){
 	int i  = m->ysize - 1;
 	for(; i >= 0; i--){
 		bool check = true;
@@ -34,13 +34,22 @@ void MapLineComplete(Map * m){
 		}
 
 		if(check){
-			for(int k = i; k > 0; k--){
-				for(int l = 0; l < m->xsize; l++)
-					m->map[k][l] = m->map[k-1][l];
+			for(int r = 0; r < m->xsize; r++){
+				m -> map[i][r].cor = sf::Color::White;
 			}
-			i = m->ysize;
+			return i;
 		}
 	}
+
+	return -1;
+}
+
+void deleteCompleteLine(Map * m, int line){
+	for(int k = line; k > 0; k--){
+		for(int l = 0; l < m->xsize; l++)
+			m->map[k][l] = m->map[k-1][l];
+	}
+	cout << "deletei" << endl;
 }
 
 TetrisText::TetrisText(int x, int y, string str, sf::Font font, int fsize){

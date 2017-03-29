@@ -19,7 +19,8 @@ typedef struct{
 }Map;
 
 Map * newMap(int xsize, int ysize);
-void MapLineComplete(Map * m);
+int checkMapLineComplete(Map * m);
+void deleteCompleteLine(Map * m, int line);
 
 class TetrisText{
     private:

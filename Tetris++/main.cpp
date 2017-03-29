@@ -32,9 +32,12 @@ int main(){
     }
 
     int x = 100, tempo = 0; double y = -30;
+    int timeToDelete = 0;
+    int lineToRemove = -1;
     int movment = 0;
     bool GameOver = false;
     bool checkLR = false;
+    bool checkLineRemove = false;
     while (WindowGame.isOpen()){
         if(menu == 0){ 
             sf::Event event;
@@ -56,7 +59,6 @@ int main(){
 
         }else{
             sf::Event event;
-
             if(tetris.canDown(mapa)){
                 while (WindowGame.pollEvent(event)){
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
@@ -78,8 +80,6 @@ int main(){
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
                incremento = 9;
 
-            //system("clear");
-            cout << tempo << endl;
             back:
             if(tetris.canDown(mapa)){
                 y += 1 + incremento;
@@ -106,20 +106,40 @@ int main(){
                         } 
                     }
 
-                    if(movment > 4)
+                    if(movment > 3)
                         tempo = delay;
                     tempo++;
                 } else {
                     movment = 0;
-                    tempo = 0;
                     tetris.addToMap(mapa);
                     tetris.Reset();
-                    MapLineComplete(mapa);
-
-                    y = -30;
                     x = 100;
+                    y = -30;
+        
+                    if(checkMapLineComplete(mapa) != -1){
+                        checkLineRemove = true;
+                        lineToRemove = checkMapLineComplete(mapa);
+                    }else
+                        tempo = 0;
                 }
             }
+
+            if(checkLineRemove){
+                timeToDelete++;
+                if(timeToDelete > 50){
+                    cout << lineToRemove << endl;
+                    deleteCompleteLine(mapa, lineToRemove);
+
+                    if(checkMapLineComplete(mapa) == -1){
+                        tempo = 0;
+                        checkLineRemove = false;
+                        timeToDelete = 0;
+                    }
+                }
+
+                cout << timeToDelete << endl;
+            }
+
 
             tetris.MoveTetris(x, y);
 
@@ -149,11 +169,7 @@ int main(){
             for(int i = 0; i < mapa -> ysize; i++){
                 for(int j = 0; j < mapa -> xsize; j++){
                     if(mapa -> map[i][j].valor == '#'){
-                        //if(tetris.canDown(mapa) && tempo == 0)
-                            mapRect[i][j].setFillColor(mapa -> map[i][j].cor);
-                        //else
-                        //    mapRect[i][j].setFillColor(tetris.getColor());
-                        
+                        mapRect[i][j].setFillColor(mapa -> map[i][j].cor);
                         WindowGame.draw(mapRect[i][j]);
                     }
                 }
