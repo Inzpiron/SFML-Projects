@@ -126,7 +126,7 @@ int main(){
 
             if(checkLineRemove){
                 timeToDelete++;
-                if(timeToDelete > 50){
+                if(timeToDelete > 3){
                     cout << lineToRemove << endl;
                     deleteCompleteLine(mapa, lineToRemove);
 

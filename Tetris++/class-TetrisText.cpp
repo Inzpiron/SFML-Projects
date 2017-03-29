@@ -26,6 +26,8 @@ Map * newMap(int xsize, int ysize){
 
 int checkMapLineComplete(Map * m){
 	int i  = m->ysize - 1;
+	bool check0 = false;
+	int pos = -20;
 	for(; i >= 0; i--){
 		bool check = true;
 		for(int j = 0; j < m->xsize; j++){
@@ -37,9 +39,12 @@ int checkMapLineComplete(Map * m){
 			for(int r = 0; r < m->xsize; r++){
 				m -> map[i][r].cor = sf::Color::White;
 			}
-			return i;
+			if(check0 == false){pos = i;check0 = true;}
 		}
 	}
+
+	if(check0 && pos != -20)
+		return pos;
 
 	return -1;
 }
