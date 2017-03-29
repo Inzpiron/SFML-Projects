@@ -35,6 +35,7 @@ int checkMapLineComplete(Map * m){
 				check = false; 
 		}
 
+		//SELECT RIGHT LINE TO ERASE
 		if(check){
 			for(int r = 0; r < m->xsize; r++){
 				m -> map[i][r].cor = sf::Color::White;
