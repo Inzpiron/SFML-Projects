@@ -116,9 +116,10 @@ bool Tetris::canMove(Map * m, string direction){
 	return true;
 }
 
-
 sf::Color Tetris::getColor(){
 	return this->color[this->type];
+	/*
+	*/
 }
 
 void  Tetris::addToMap(Map * m){
@@ -145,15 +146,18 @@ void Tetris::draw(sf::RenderWindow &WindowGame){
 	Tetris::SetTetris();
 	for(int i = 0; i < 3; i++){
 		for(int j = 0; j < 3; j++){
-            if(Rect[i][j].getFillColor() != sf::Color::Black)
+            if(Rect[i][j].getFillColor() != sf::Color::Black){
+                Rect[i][j].setRotation(0);
                 WindowGame.draw(Rect[i][j]);
+
+           	}
         }
 	}
 
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++)
-			cout << this->peca[this->type][this->rot][i][j];	
-		cout << endl;
-	}
-	cout << this->type << " " << this->rot << endl;
+	//for(int i = 0; i < 3; i++){
+	//	for(int j = 0; j < 3; j++)
+			//cout << this->peca[this->type][this->rot][i][j];	
+		//cout << endl;
+	//}
+	//cout << this->type << " " << this->rot << endl;
 }

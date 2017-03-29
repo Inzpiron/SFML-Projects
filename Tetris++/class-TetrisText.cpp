@@ -43,20 +43,30 @@ void MapLineComplete(Map * m){
 	}
 }
 
-TetrisText::TetrisText(int x, int y, string str, sf::Font font, int size){
+TetrisText::TetrisText(int x, int y, string str, sf::Font font, int fsize){
 	this->font = font;
-	this->size = size;
-	this->str = "OLA";
+	this->fsize = fsize;
+	this->str = str;
 	this->cor = sf::Color::Yellow;
 	this->x = 40; this->y = 40;
 }
 
 void TetrisText::draw(sf::RenderWindow &WindowGame){
-	sf::Text teste;
-	teste.setCharacterSize(this->size);
-	teste.setFont(this->font);
-	teste.setString(this->str);
-	teste.setFillColor(this->cor);
-	teste.setPosition(this->x,this->y);
-	WindowGame.draw(teste);
+	sf::Text letra[this->str.size()];
+	double MaxWidth;
+	for(int i = 0; i < str.size(); i++){
+		string aux = "";
+		aux += str[i];
+		letra[i].setCharacterSize(this->fsize);
+		letra[i].setFont(this->font);
+		letra[i].setString(aux);
+		letra[i].setFillColor(this->cor);
+
+		if(letra[i].getLocalBounds().width > MaxWidth)
+			MaxWidth = letra[i].getLocalBounds().width;
+	}
+	for(int i = 0; i < str.size(); i++){
+		letra[i].setPosition(this->x + (i*MaxWidth) + 1,this->y);
+		WindowGame.draw(letra[i]);
+	}
 }

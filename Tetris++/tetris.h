@@ -23,7 +23,7 @@ void MapLineComplete(Map * m);
 
 class TetrisText{
     private:
-        int x, y, size;
+        int x, y, fsize;
         string realText;
         sf::Font font;
         sf::Color cor;
