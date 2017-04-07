@@ -55,33 +55,81 @@ void deleteCompleteLine(Map * m, int line){
 		for(int l = 0; l < m->xsize; l++)
 			m->map[k][l] = m->map[k-1][l];
 	}
-	cout << "deletei" << endl;
+	//cout << "deletei" << endl;
 }
 
-TetrisText::TetrisText(int x, int y, string str, sf::Font font, int fsize){
+TetrisText::TetrisText(int posx, int posy, string str, sf::Font font, int fsize){
+	this->conf = new LetraConfig[str.size()];
 	this->font = font;
-	this->fsize = fsize;
 	this->str = str;
-	this->cor = sf::Color::Yellow;
-	this->x = 40; this->y = 40;
+	this->cor = sf::Color::Red;
+	this->posx = posx; this->posy = posy;
+	sf::Text letra[this->str.size()];
+	this -> Width = 0;
+
+	for(int i = 0; i < this->str.size(); i++){
+		string aux = "";
+		aux += str[i];
+
+		this->conf[i].x     = this->posx + this->Width;
+		this->conf[i].y     = this->posy;
+		this->conf[i].color = this->cor;
+		this->conf[i].fsize = fsize;
+
+		letra[i].setCharacterSize(this->conf[i].fsize);
+		letra[i].setFont(this->font);
+		letra[i].setString(aux);
+		letra[i].setFillColor(this->conf[i].color);
+
+		this -> Width += letra[i].getLocalBounds().width;
+		this->Height = letra[0].getLocalBounds().height;
+	}
+
+	//SLIDE EFFECT AUX Var
+		this -> check = false;
+		this -> pos = 0;
+}
+
+void TetrisText::setPosition(int x, int y){
+	this -> posx = x;
+	this -> posy = y;
 }
 
 void TetrisText::draw(sf::RenderWindow &WindowGame){
 	sf::Text letra[this->str.size()];
-	double MaxWidth;
-	for(int i = 0; i < str.size(); i++){
+	for(int i = 0; i < this->str.size(); i++){
 		string aux = "";
 		aux += str[i];
-		letra[i].setCharacterSize(this->fsize);
+		letra[i].setCharacterSize(this->conf[i].fsize);
 		letra[i].setFont(this->font);
 		letra[i].setString(aux);
-		letra[i].setFillColor(this->cor);
-
-		if(letra[i].getLocalBounds().width > MaxWidth)
-			MaxWidth = letra[i].getLocalBounds().width;
+		letra[i].setFillColor(this->conf[i].color);
+		letra[i].setOrigin(0, ((int)this->Height)/2);
 	}
+
 	for(int i = 0; i < str.size(); i++){
-		letra[i].setPosition(this->x + (i*MaxWidth) + 1,this->y);
+		letra[i].setPosition(this->conf[i].x, this->conf[i].y);
 		WindowGame.draw(letra[i]);
+	}
+}
+
+void TetrisText::slideEffect(){
+
+	for(int i = 0; i < this->str.size(); i++){
+		if(this->pos != i){
+			if(this->conf[i].y < posy){
+				this->conf[i].y++;
+			}
+		}
+	}
+
+	if(this->conf[this->pos].y > posy-20 && this->check == false){
+		this->conf[this->pos].y -= 2;
+	}else check = true;
+
+	if(check == true){
+		//this->conf[this->pos].y = this->posy;
+		this->check = false;
+		(++this->pos) %= this->str.size() - 1;
 	}
 }
