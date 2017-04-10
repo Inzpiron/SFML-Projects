@@ -21,6 +21,7 @@ int main(){
 
     Tetris tetris(200, 240, 20, 0);
     Tetris projecao(200, 240, 20, 0);
+
     projecao.projecao = true;
     tetris.SetTetris();
     Map * mapa = newMap(24, 32);
@@ -39,29 +40,77 @@ int main(){
     int lineToRemove = -1;
     int movment = 0;
     bool GameOver = false;
-    bool checkLR = false;
     bool checkLineRemove = false;
     
     sf::Event event;
     sf::Font font;
     font.loadFromFile("Monofett.ttf");
-    TetrisText TitleText(17, 30, "Tetris++\n", font, 100);
     
+    TetrisText TitleText(17, 100, "Tetris++", font, 100, sf::Color::Blue);
+    TitleText.setPosition((480-TitleText.Width)/2.0, 100);
+    
+    vector< vector<TetrisText> > MenuText (3);// = MenuText(17, 30, "Tetris++", font, 100);
+    
+    int pos = 230;
+    for(int i = 0; i < 3; i++){
+        string TextOfButton = "";
+        switch(i){
+            case 0: TextOfButton = "Play"; break;
+            case 1: TextOfButton = "Draw"; break;
+            case 2: TextOfButton = "Quit"; break;
+        }
+
+        string aux1 = "*" + TextOfButton + "*";
+        TetrisText aux(80, pos + 10, TextOfButton, font, 96, sf::Color::Red);
+        TetrisText aux2(90, pos, aux1, font, 96, sf::Color::Red);
+        sf::Color corAux = sf::Color::White; corAux.a = 200;
+        sf::Color corAux1 = corAux; corAux1.a = 50;
+        MenuText[i].push_back(TetrisText((480 - aux.Width)/2.0 + 7, pos, TextOfButton, font, 90, corAux1)); //Botão não selecionado
+        MenuText[i].push_back(TetrisText((480 - aux2.Width)/2.0, pos, aux1, font, 96, corAux)); //Botao selecionado
+        pos += MenuText[i][1].Height + 3;
+    }
+
+    int menuOpc = 0;
+
     while (WindowGame.isOpen()){
-        if(menu == 0){ 
+        if(menu == 0){
             TitleText.slideEffect();
             while (WindowGame.pollEvent(event)){
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-                    menu = 1;
-                }
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){}
+                if(event.type == sf::Event::KeyPressed){   
+                    if(event.key.code == sf::Keyboard::Return){
+                        switch(menuOpc){
+                            case 0: menu = 1; break;
+                            case 2: WindowGame.close(); break;
+                        }
+                    }
 
+                    if(event.key.code == sf::Keyboard::Up){
+                        if(menuOpc > 0)
+                            menuOpc--;
+                    }
+
+                    if(event.key.code == sf::Keyboard::Down){
+                        if(menuOpc < 2)
+                            menuOpc++;   
+                    }
+                }
                 if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                     WindowGame.close();
             }
 
+
+
             WindowGame.clear();
             TitleText.draw(WindowGame);
+            for(int i = 0; i < (int) MenuText.size(); i++){
+                if(menuOpc == i){
+                    MenuText[i][1].setColor(TitleText.corAtual);
+                    MenuText[i][1].draw(WindowGame);
+                }else{
+                    //MenuText[i][0].setColor(TitleText.corAtual);
+                    MenuText[i][0].draw(WindowGame);
+                }
+            }
             WindowGame.display();
 
         }else{
@@ -101,6 +150,10 @@ int main(){
             back:
             if(tetris.canDown(mapa)){
                 y += 2 + incremento;
+                if(!tetris.canDown(mapa)){
+                    y -= (double)(((int)y)%20);
+                    tetris.MoveTetris(x, y);
+                }
                 projecao.size = tetris.size;
                 projecao.posx = x;
                 projecao.rot  = tetris.rot;
@@ -112,8 +165,9 @@ int main(){
                 }
             }else{
                 int delay;
-                if(GameOver == true) delay = 5; else delay = 20; 
+                if(GameOver == true) delay = 10; else delay = 20; 
                 y -= (double)(((int)y)%20);
+                tetris.MoveTetris(x, y);
                 if (tempo < delay){
                     while(WindowGame.pollEvent(event)){
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
@@ -192,11 +246,16 @@ int main(){
             for(int i = 0; i < mapa -> ysize; i++){
                 for(int j = 0; j < mapa -> xsize; j++){
                     if(mapa -> map[i][j].valor == '#'){
-                        mapRect[i][j].setFillColor(mapa -> map[i][j].cor);
+                        if(!GameOver)
+                            mapRect[i][j].setFillColor(mapa -> map[i][j].cor);
+                        else
+                            mapRect[i][j].setFillColor(tetris.getColor());
+
                         WindowGame.draw(mapRect[i][j]);
                     }
                 }
             }
+            if(!tetris.canDown(mapa)){y -= (double)(((int)y)%20); tetris.MoveTetris(x, y);}
             tetris.draw(WindowGame);
             if(projecao.posy != 0 && tetris.canDown(mapa))
                 projecao.draw(WindowGame);

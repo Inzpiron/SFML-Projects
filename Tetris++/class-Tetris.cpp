@@ -24,8 +24,7 @@ void Tetris::SetTetris(){
 				Rect[i][j].setFillColor(sf::Color::Black);
 			}else{
 				if(this -> projecao == true){
-
-					sf::Color transp(this -> color[this->type].r, this -> color[this->type].g, this -> color[this->type].b, 80);
+					sf::Color transp(this -> color[this->type].r, this -> color[this->type].g, this -> color[this->type].b, 50);
 					Rect[i][j].setFillColor(transp);
 				}else
 					Rect[i][j].setFillColor(this -> color[this->type]);
@@ -150,9 +149,9 @@ void  Tetris::addToMap(Map * m){
 }
 
 void Tetris::Reset(){
-	this -> posx = 0;
+	this -> posx = 250;
 	this -> posy = 0; 
-	this -> type = (++this -> type)%5;
+	(++this -> type) %= 5;
 	this -> rot  = 0;
 	Tetris::SetTetris();
 }

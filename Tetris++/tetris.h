@@ -34,13 +34,16 @@ class TetrisText{
         sf::Color cor;
         LetraConfig * conf;
         string str;
-
         //Slide effect aux vars:
         bool check;
         int pos;
+        int corPos;
     public:
+        sf::Color corAtual;
+        void setColor(sf::Color cor);
         double Width, Height;
-        TetrisText(int posx, int posy, string str, sf::Font font, int size);
+        void setStr(string str);
+        TetrisText(int posx, int posy, string str, sf::Font font, int size, sf::Color cor);
         void setPosition(int x, int y);
         void draw(sf::RenderWindow &WindowGame);
         void slideEffect();
