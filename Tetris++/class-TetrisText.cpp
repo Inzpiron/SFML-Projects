@@ -79,7 +79,7 @@ TetrisText::TetrisText(int posx, int posy, string str, sf::Font font, int fsize,
 		letra[i].setCharacterSize(this->conf[i].fsize);
 		letra[i].setFont(this->font);
 		letra[i].setString(aux);
-		letra[i].setFillColor(this->conf[i].color);
+		letra[i].setColor(this->conf[i].color);
 
 		this -> Width += letra[i].getLocalBounds().width;
 		this -> Height = letra[0].getLocalBounds().height;
@@ -112,7 +112,7 @@ void TetrisText::draw(sf::RenderWindow &WindowGame){
 		letra[i].setCharacterSize(this->conf[i].fsize);
 		letra[i].setFont(this->font);
 		letra[i].setString(aux);
-		letra[i].setFillColor(this->conf[i].color);
+		letra[i].setColor(this->conf[i].color);
 		letra[i].setOrigin(0, ((int)this->Height)/2);
 	}
 

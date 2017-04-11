@@ -41,7 +41,8 @@ int main(){
     int movment = 0;
     bool GameOver = false;
     bool checkLineRemove = false;
-    
+    bool checkPressed = false;
+    sf::Clock clock;
     sf::Event event;
     sf::Font font;
     font.loadFromFile("Monofett.ttf");
@@ -64,7 +65,7 @@ int main(){
         TetrisText aux(80, pos + 10, TextOfButton, font, 96, sf::Color::Red);
         TetrisText aux2(90, pos, aux1, font, 96, sf::Color::Red);
         sf::Color corAux = sf::Color::White; corAux.a = 200;
-        sf::Color corAux1 = corAux; corAux1.a = 50;
+        sf::Color corAux1(50,50,50);
         MenuText[i].push_back(TetrisText((480 - aux.Width)/2.0 + 7, pos, TextOfButton, font, 90, corAux1)); //Botão não selecionado
         MenuText[i].push_back(TetrisText((480 - aux2.Width)/2.0, pos, aux1, font, 96, corAux)); //Botao selecionado
         pos += MenuText[i][1].Height + 3;
@@ -116,8 +117,34 @@ int main(){
         }else{
             sf::Event event;
             if(tetris.canDown(mapa)){
+
+                if(event.type == sf::Event::KeyPressed){
+                    if(event.key.code == sf::Keyboard::Right && tetris.canMove(mapa, "right")){
+                        if(!checkPressed){
+                            x += 20;
+                            checkPressed = true;
+                        }else{
+                            sf::Time t = clock.getElapsedTime();
+                            if(t.asSeconds() > 0.15)
+                                x += 20;
+                        }
+                    } else if(event.key.code == sf::Keyboard::Left && tetris.canMove(mapa, "left")){
+                        x -= 20;
+                    }
+                }
+
+                if(event.type == sf::Event::KeyReleased){
+                    if(event.key.code == sf::Keyboard::Right){
+                        if(checkPressed)
+                            checkPressed = false;
+                    }
+                }
+
+                clock.restart();
+
+                sf::Time kkkk = clock.getElapsedTime();
                 while (WindowGame.pollEvent(event)){
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+                    /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
                         if(tetris.canMove(mapa, "left")){
                             x -= 20;
                             //projecao.posy = 0;
@@ -127,7 +154,7 @@ int main(){
                             x += 20;
                             //projecao.posy = 0;
                         }
-                    }
+                    }*/
                     
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
                         tetris.setPecaRot(mapa);
@@ -229,11 +256,11 @@ int main(){
             if(!GameOver){
                 for(int i = 0; i < mapa->ysize; i++){
                     for(int j = 0; j < mapa->xsize; j++){
-                        cout << mapa -> map[i][j].valor;
+                        //cout << mapa -> map[i][j].valor;
                     }
-                    cout << endl;
+                    //cout << endl;
                 }
-                cout << x/20 << " " << (int)y/20 << endl;
+                //cout << x/20 << " " << (int)y/20 << endl;
             }
             
             if((int)y/20 < 0 && tetris.canDown(mapa) == false){
