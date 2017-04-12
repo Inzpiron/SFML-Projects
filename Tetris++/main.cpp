@@ -137,6 +137,7 @@ int main(){
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)){
                         x = projecao.posx;
                         y = projecao.posy - 2;
+                        tempo = 30;
                     }
 
                     if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -158,11 +159,12 @@ int main(){
                 projecao.posx = x;
                 projecao.rot  = tetris.rot;
                 projecao.type = tetris.type;
-                projecao.posy = 0;
+                projecao.posy = tetris.posy;
                 while(projecao.canDown(mapa)){
                     projecao.posy += 20;
                     //cout << projecao.posy << endl;
                 }
+                projecao.posy -= (double)(((int)projecao.posy)%20);
             }else{
                 int delay;
                 if(GameOver == true) delay = 10; else delay = 20; 
